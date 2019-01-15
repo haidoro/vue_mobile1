@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
-    <GrobalNav_pc/>
-    <GrobalNav_sp/>
+    <GrobalNav_sp v-if="mobile"/>
+    <GrobalNav_pc v-else />
     <HelloWorld/>
   </div>
 </template>
@@ -11,12 +11,22 @@
 import HelloWorld from './components/HelloWorld'
 import GrobalNav_pc from './components/GrobalNav_pc'
 import GrobalNav_sp from './components/GrobalNav_sp'
+
 export default {
   name: 'App',
   components: {
     HelloWorld,
     GrobalNav_pc,
     GrobalNav_sp
+  },
+  data(){
+    return{
+      mobile:false
+    }
+  },
+  created: function () {
+    const isMobile = require('ismobilejs');
+    this.mobile = isMobile.phone;
   }
 }
 </script>

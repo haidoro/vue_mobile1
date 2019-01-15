@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'GrobalNav_sp',
   data () {
@@ -13,7 +14,7 @@ export default {
         "listItem1":"example/sample1.html",
         "listItem2":"example/sample2.html",
         "listItem4":"example/sample4.html",
-      }
+          }
     }
   }
 }

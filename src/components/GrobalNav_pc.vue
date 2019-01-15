@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'GrobalNav_pc',
   data () {
