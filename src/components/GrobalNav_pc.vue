@@ -1,11 +1,13 @@
 <template>
+<div>
+  <img :src="image_src">
   <ul class="gnav">
     <li v-for="(value,key) in lists"><a :href="value">{{key}}</a></li>
   </ul>
+</div>
 </template>
 
 <script>
-
 export default {
   name: 'GrobalNav_pc',
   data () {
@@ -15,7 +17,8 @@ export default {
         "listItem2":"example/sample2.html",
         "listItem3":"example/sample3.html",
         "listItem4":"example/sample4.html",
-      }
+      },
+      image_src: require("../assets/logo.png")
     }
   }
 }

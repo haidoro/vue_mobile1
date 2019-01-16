@@ -1,9 +1,8 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <GrobalNav_sp v-if="mobile"/>
-    <GrobalNav_pc v-else />
-    <HelloWorld/>
+    <gnav-sp v-if="mobile" />
+    <gnav-pc v-else />
+    <hello-world />
   </div>
 </template>
 
@@ -15,13 +14,13 @@ import GrobalNav_sp from './components/GrobalNav_sp'
 export default {
   name: 'App',
   components: {
-    HelloWorld,
-    GrobalNav_pc,
-    GrobalNav_sp
+    'hello-world':HelloWorld,
+    'gnav-pc':GrobalNav_pc,
+    'gnav-sp':GrobalNav_sp
   },
   data(){
     return{
-      mobile:false
+      mobile:false,
     }
   },
   created: function () {
@@ -39,6 +38,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 10px;
+}
+p{
+  text-align: left;
 }
 </style>
