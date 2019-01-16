@@ -138,6 +138,47 @@ created: function () {
 
 ハマったところは「GrobalNav_sp.vue」でのshow関数をアロー関数で書いたために「this」の指す相手がdataでなかったこと。これによりdataの値を変更できなかったこと。基本dataを変更する関数はアロー関数は使わないことが大事。
 
+## 親から子へデーターを渡す
+
+App.vueのdataにあるname : 'Tahara'の値を子のテンプレートHelloAorld.vueに渡します。
+
+親テンプレートでやること
+
+`<hello-world :myName = name />`の中で「:myName = name」の記述をする。
+
+:myNameとはつまり属性バインディング「v-bind:myName = name」を省略したもの。
+
+子テンプレートでやること
+
+`props:['myName']`の記述とデーター表示部分に「{{myName}}」を記述。これでデーターが渡される。
+
+propsは型の指定をすることができます。型が違えばエラーをスローする。
+
+`required:true`とすると必須項目となる。また`default:'Hoge'`とすると属性バインディングを`:myName = name` を入れなかった場合デフォルト値が表示されることになる。
+
+### 子から親へデーターを渡す
+
+この場合はイベントを通す。
+
+`<button @click = "resetName">Reset Name</button>` とすることでresetName関数を定義する。
+
+関数ではまずHogeに名前を変更して、`$emit('nameReset',this.myName)` で親にデータを渡す。
+
+```
+methods:{
+    resetName(){
+      this.myName = 'Hoge';
+      this.$emit('nameReset',this.myName);
+    }
+  }
+```
+
+親では`<hello-world :myName = "name" @nameReset = "name = $event"/> `
+
+「@nameReset = "name = $event"」でデータを受け取る。
+
+「`$emit`」と「`$event`」がポイントとなる。
+
 
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

@@ -1,6 +1,8 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <p>Hello!{{myName}}</p>
+    <button @click = "resetName">Reset Name</button>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
     quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
@@ -16,6 +18,19 @@ export default {
   data () {
     return {
       msg: 'Welcome to MyPage!'
+    }
+  },
+  props:{
+    myName : {
+      type: String,
+      // required:true
+      default:'Hoge'
+    }
+  },
+  methods:{
+    resetName(){
+      this.myName = 'Hoge';
+      this.$emit('nameReset',this.myName);
     }
   }
 }

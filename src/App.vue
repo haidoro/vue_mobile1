@@ -2,7 +2,8 @@
   <div id="app">
     <gnav-sp v-if="mobile" />
     <gnav-pc v-else />
-    <hello-world />
+    <p>{{name}}さん、こんにちは。</p>
+    <hello-world :myName = "name" @nameReset = "name = $event"/>
   </div>
 </template>
 
@@ -21,6 +22,7 @@ export default {
   data(){
     return{
       mobile:false,
+      name:'Tahara'
     }
   },
   created: function () {

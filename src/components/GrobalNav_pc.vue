@@ -13,7 +13,7 @@ export default {
   data () {
     return {
       lists: {
-        "listItem1":"example/sample1.html",
+        "listItem1":"https://itstudio.co",
         "listItem2":"example/sample2.html",
         "listItem3":"example/sample3.html",
         "listItem4":"example/sample4.html",
