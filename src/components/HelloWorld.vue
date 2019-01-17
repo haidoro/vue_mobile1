@@ -9,6 +9,11 @@
     consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
     cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
     proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <hr>
+    <p class="text-center"><button @click="show = !show">switch</button></p>
+    <transition appear enter-active-class="animated bounce" leave-active-class="animated shake">
+    <img :src="image_src" v-if="show">
+    </transition>
   </div>
 </template>
 
@@ -17,7 +22,9 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to MyPage!'
+      msg: 'Welcome to MyPage!',
+      image_src: require("../assets/dog01.png"),
+      show:true
     }
   },
   props:{
@@ -51,5 +58,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.text-center{
+  text-align:center
 }
 </style>
