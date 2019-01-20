@@ -5,7 +5,7 @@ import VueResource from 'vue-resource'
 import App from './App'
 
 Vue.use(VueResource);
-
+Vue.http.options.root = 'https://example.firebaseio.com/data.json'
 
 Vue.config.productionTip = false
 

@@ -182,3 +182,78 @@ methods:{
 
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+## http接続
+
+Vue.js標準で準備された仕組みを利用（現在はAxiosを推奨）
+
+vue-resourceを活用　https://github.com/pagekit/vue-resource
+
+Vue CLIの場合はnpmを使う
+
+```
+npm install vue-resource
+```
+
+
+
+FirebaseのDatabaseと接続します。（リアルタイムデータベースを使用）
+
+
+
+Main.jsに次の記述を追加することで通信できます。
+
+```
+import VueResource from 'vue-resource'
+
+Vue.use(VueResource);
+Vue.http.options.root = 'https://example.firebaseio.com/data.json'
+```
+
+input要素とdataプロパティでバインディングの仕組みを作成して以下のmethodsを定義するだけです。
+
+this.$http.post()の第1引数はデータベースのアドレスで最後にdata.jsonをつけること。
+
+データベースアドレスはFirebaseのDatabase項目に記述されたいるアドレスを使います。下記画像赤枠
+
+![database](database.png)
+
+post送信の場合、this.$http.post()の第1引数はデータベースのアドレスで第2引数に送信するデータを指定します。
+
+データベースからデータを取得するには、this.$http.get()を使います。こちらは第1引数のみでデータベースのアドレスを入れるだけ。
+
+
+
+また、main.jsに`Vue.http.options.root = 'https://example.firebaseio.com/data.json'`の記述をした場合はthis.$http.post()の第1引数は空にすることができます。
+
+
+
+取得したデータは配列になっていますので下記コードのようにループ文で取り出す。
+
+```
+methods:{
+    submit(){
+      this.$http.post('',this.user)
+        .then(response =>{
+            console.log(response)
+        },error=>{
+            console.log(error)
+        })
+    },
+    fetchData(){
+      this.$http.get('')
+        .then(response =>{
+            //const data = response.json()
+            return response.json()
+        })
+        .then(data => {
+          const resultArray = []
+          for (let key in data){
+            resultArray.push(data[key])
+          }
+          this.users = resultArray
+        })
+    }
+  }
+```
+

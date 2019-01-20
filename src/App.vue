@@ -4,6 +4,7 @@
     <gnav-pc v-else />
     <p>{{name}}さん、こんにちは。</p>
     <hello-world :myName = "name" @nameReset = "name = $event"/>
+    <form-content />
   </div>
 </template>
 
@@ -11,13 +12,15 @@
 import HelloWorld from './components/HelloWorld'
 import GrobalNav_pc from './components/GrobalNav_pc'
 import GrobalNav_sp from './components/GrobalNav_sp'
+import FormContent from './components/FormContent'
 
 export default {
   name: 'App',
   components: {
     'hello-world':HelloWorld,
     'gnav-pc':GrobalNav_pc,
-    'gnav-sp':GrobalNav_sp
+    'gnav-sp':GrobalNav_sp,
+    'form-content':FormContent
   },
   data(){
     return{

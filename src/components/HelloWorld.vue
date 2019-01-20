@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>Hello!{{myName}}</p>
+    <p class="text-center">Hello!{{myName}}</p>
     <button @click = "resetName">Reset Name</button>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -10,10 +10,12 @@
     cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
     proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     <hr>
+    <h2>Transition</h2>
     <p class="text-center"><button @click="show = !show">switch</button></p>
     <transition appear enter-active-class="animated bounce" leave-active-class="animated shake">
     <img :src="image_src" v-if="show">
     </transition>
+    <hr>
   </div>
 </template>
 
@@ -62,4 +64,5 @@ a {
 .text-center{
   text-align:center
 }
+
 </style>
