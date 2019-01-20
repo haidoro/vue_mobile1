@@ -5,6 +5,8 @@
     <p>{{name}}さん、こんにちは。</p>
     <hello-world :myName = "name" @nameReset = "name = $event"/>
     <form-content />
+    <my-counter />
+    <p>Counter is : {{ counter }}</p>
   </div>
 </template>
 
@@ -13,6 +15,7 @@ import HelloWorld from './components/HelloWorld'
 import GrobalNav_pc from './components/GrobalNav_pc'
 import GrobalNav_sp from './components/GrobalNav_sp'
 import FormContent from './components/FormContent'
+import Counter from './components/Counter'
 
 export default {
   name: 'App',
@@ -20,12 +23,18 @@ export default {
     'hello-world':HelloWorld,
     'gnav-pc':GrobalNav_pc,
     'gnav-sp':GrobalNav_sp,
-    'form-content':FormContent
+    'form-content':FormContent,
+    'my-counter':Counter
   },
   data(){
     return{
       mobile:false,
       name:'Tahara'
+    }
+  },
+  computed:{
+    counter(){
+      return this.$store.state.counter
     }
   },
   created: function () {

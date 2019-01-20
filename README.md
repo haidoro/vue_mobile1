@@ -257,3 +257,57 @@ methods:{
   }
 ```
 
+
+
+## Vuexを使った状態管理
+
+srcフォルダ内にstoreフォルダを作成してその中にstore.jsを作成します。
+
+かくコンポーネントで共有するデータはここで集中管理できるようになります。
+
+Store.js 記述内容
+
+```
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+export const store = new Vuex.Store({
+  state:{
+    counter:0//ここに管理したいデータを記述
+  }
+})
+```
+
+あとはデータを使いたいところで次の記述をする
+
+```
+this.$store.state.counter
+```
+
+今回はCounter.vueとAPP.でcounterの値を使っている。
+
+値の保存はメソッドを使い、読み込みはcomputedを使った。
+
+```
+methods:{
+    increment(){
+      this.$store.state.counter++
+    },
+    decrement(){
+      this.$store.state.counter--
+    }
+  }
+```
+
+
+
+```
+computed:{
+    counter(){
+      return this.$store.state.counter
+    }
+  }
+```
+
