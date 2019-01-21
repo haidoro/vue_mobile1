@@ -13,7 +13,7 @@ export default {
       this.$store.state.counter++
     },
     decrement(){
-      this.$store.state.counter--
+      this.$store.commit('decrement')
     }
   }
 }

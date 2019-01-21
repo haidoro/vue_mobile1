@@ -10,6 +10,7 @@
     cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
     proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     <hr>
+     <p>Counter is : {{ counter }}</p>
     <h2>Transition</h2>
     <p class="text-center"><button @click="show = !show">switch</button></p>
     <transition appear enter-active-class="animated bounce" leave-active-class="animated shake">
@@ -34,6 +35,11 @@ export default {
       type: String,
       // required:true
       default:'Hoge'
+    }
+  },
+  computed:{
+    counter(){
+      return this.$store.getters.counterIs
     }
   },
   methods:{
