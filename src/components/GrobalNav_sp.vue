@@ -26,9 +26,9 @@ export default {
     gnav: false,
     image_src: require("../assets/logo.png"),
     lists: {
-      "listItem1":"example/sample1.html",
-      "listItem2":"example/sample2.html",
-      "listItem4":"example/sample4.html"
+      "listItem1":"/",
+      "listItem2":"/hello",
+      "listItem4":"https://itstudio.co/"
       }
     }
   },

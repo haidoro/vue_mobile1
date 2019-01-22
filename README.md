@@ -12,7 +12,9 @@ PC版で存在する要素をモバイルでは全く別の要素にしたい訳
 
 
 
-## ファイルをダンロードして使う手順
+## GitHubから当該ページをダンロードして使う手順
+
+Node.js導入済みなら、次のコマンドで私と同じ環境ができます。
 
 ``` bash
 # install dependencies
@@ -30,7 +32,7 @@ npm run build --report
 
 
 
-## 最初から作成方法
+## ゼロからプロジェクト作成方法
 
 ### vue-cli のインストール
 
@@ -57,6 +59,10 @@ npm run dev
 
 ### ビルド
 
+ビルドは実運用するためのファイルを書き出すものです。
+
+distフォルダができてその中にファイルが書き出されます。
+
 ```
 npm run build
 ```
@@ -81,9 +87,13 @@ styleタグには以下のようにlang="scss"を付ける。
 
 ### GitHub Pagesへのデプロイ
 
-難しいように思えるがbuildする先をdocsフォルダに変えるだけ。
+完成作品をGitPagesにアップロードする方法
+
+難しいように思えるがbuildする先をdocsフォルダに変えただけ。そのため以降buildしてもファイルはdistに入らなくなる。
 
 GitHub Pagesはbuildしたファイルがdistではなくdocsフォルダになければならない。
+
+`assetsPublicPath: '/' `を`./`に変更することでパスがルートパスから相対パスとなり一般のレンタルサーバーでもdocsフォルダをアップロードすれば使えるようになる。
 
 `config/index.js`の編集
 
@@ -116,7 +126,9 @@ GitHub Pagesでは「master branch /docs folder」を選択してSaveすればOK
 
 ## template作成のポイント
 
-App.vueに作成したテンプレートを集めて、モバイル用のテンプレート「gnav-sp」とPC用のテンプレート「gnav-pc」にv-ifを使って切り分けをした。
+### ismobilejsの使い方
+
+モバイル用のテンプレート「gnav-sp」とPC用のテンプレート「gnav-pc」にv-ifを使って切り分けをした。
 
 モバイルの判定は「ismobilejs」を使用した。
 
@@ -136,7 +148,7 @@ created: function () {
 
 
 
-ハマったところは「GrobalNav_sp.vue」でのshow関数をアロー関数で書いたために「this」の指す相手がdataでなかったこと。これによりdataの値を変更できなかったこと。基本dataを変更する関数はアロー関数は使わないことが大事。
+ハマったところは「GrobalNav_sp.vue」でのshow関数をアロー関数で書いたために「this」の指す相手がdataでなかったこと。これによりdataの値を変更できなかったこと。methodsの関数でdataを変更する場合はアロー関数は使わないことが大事。
 
 ## 親から子へデーターを渡す
 
@@ -313,132 +325,55 @@ computed:{
 
 
 
-# ゲッター
+### ゲッター
 
-例えば項目のリストをフィルタリングしたりカウントするときのように、ストアの状態を算出したいときがあります。
+例えばdataの値をフィルタリングしたりカウントした値を表示したい場合、ストアの状態を computedで算出したいときがあります。
 
 ```js
-computed: {
-  doneTodosCount () {
-    return this.$store.state.todos.filter(todo => todo.done).length
-  }
+computed:{
+    counter(){
+      return 'カウンターは' +　this.$store.getters.counterIs + 'です。'
+    }
 }
 ```
 
-もしこの関数を複数のコンポーネントで利用したくなったら、関数をコピーするか、あるいは関数を共用のヘルパーに切り出して複数の場所でインポートする必要があります。しかし、どちらも理想的とはいえません。
 
-Vuex を利用するとストア内に "ゲッター" を定義することができます。それらをストアの算出プロパティと考えることができます。算出プロパティと同様に、ゲッターの結果はその依存関係に基づいて計算され、依存関係の一部が変更されたときにのみ再評価されます。
+
+ここで、上記のcomuputedを色々なコンポーネントで利用したくなったら、各コンポーネントごとにcomputedをコピーするか、あるいはcomputedを共用のヘルパーに切り出して複数の場所でインポートする必要があります。しかし、どちらも理想的とはいえません。
+
+Vuex を利用するとストア内に "ゲッター" を定義することができます。
+
+それらをストアの算出プロパティと考えることができます。算出プロパティと同様に、ゲッターの結果はその依存関係に基づいて計算され、依存関係の一部が変更されたときにのみ再評価されます。
 
 ゲッターは第1引数として、state を受け取ります:
 
 ```js
 const store = new Vuex.Store({
-  state: {
-    todos: [
-      { id: 1, text: '...', done: true },
-      { id: 2, text: '...', done: false }
-    ]
-  },
-  getters: {
-    doneTodos: state => {
-      return state.todos.filter(todo => todo.done)
-    }
-  }
-})
-```
-
-### プロパティスタイルアクセス
-
-ゲッターは `store.getters` オブジェクトから取り出され、プロパティとしてアクセスすることができます:
-
-```js
-store.getters.doneTodos // -> [{ id: 1, text: '...', done: true }]
-```
-
-ゲッターは第2引数として他のゲッターを受け取ります:
-
-```js
-getters: {
-  // ...
-  doneTodosCount: (state, getters) => {
-    return getters.doneTodos.length
-  }
-}
-store.getters.doneTodosCount // -> 1
-```
-
-どのコンポーネントの内部でも簡単にゲッターを利用することができます:
-
-```js
-computed: {
-  doneTodosCount () {
-    return this.$store.getters.doneTodosCount
-  }
-}
-```
-
-プロパティとしてアクセスされるゲッターは Vue のリアクティブシステムの一部としてキャッシュされるという点に留意してください。
-
-### メソッドスタイルアクセス
-
-関数を返り値にすることで、ゲッターに引数を渡すこともできます。これは特にストアの中の配列を検索する時に役立ちます：
-
-```js
-getters: {
-  // ...
-  getTodoById: (state) => (id) => {
-    return state.todos.find(todo => todo.id === id)
-  }
-}
-store.getters.getTodoById(2) // -> { id: 2, text: '...', done: false }
-```
-
-メソッドによってアクセスされるゲッターは呼び出す度に実行され、その結果はキャッシュされない点に留意してください。
-
-### `mapGetters` ヘルパー
-
-`mapGetters` ヘルパーはストアのゲッターをローカルの算出プロパティにマッピングさせます:
-
-```js
-import { mapGetters } from 'vuex'
-
-export default {
-  // ...
-  computed: {
-    // ゲッターを、スプレッド演算子（object spread operator）を使って computed に組み込む
-    ...mapGetters([
-      'doneTodosCount',
-      'anotherGetter',
-      // ...
-    ])
-  }
-}
-```
-
-ゲッターを異なる名前でマッピングさせたいときはオブジェクトを使います:
-
-```js
-...mapGetters({
-  // `this.doneCount` を `this.$store.getters.doneTodosCount` にマッピングさせる
-  doneCount: 'doneTodosCount'
+   	state:{
+    	counter:0
+  	},
+  	getters:{
+    	counterIs: state => {
+      	return 'カウンターは' + state.counter + 'です。'
+    	}
+  	}
 })
 ```
 
 
 
-# ミューテーション
+### ミューテーション
 
-実際に Vuex のストアの状態を変更できる唯一の方法は、ミューテーションをコミットすることです。Vuex のミューテーションはイベントにとても近い概念です: 各ミューテーションは**タイプ**と**ハンドラ**を持ちます。ハンドラ関数は Vuex の状態（state）を第1引数として取得し、実際に状態の変更を行います:
+実際に Vuex のストアの状態を変更する方法は、ミューテーションを使います。Vuex のミューテーションはイベントに応じて反応する関数のようなものです。 各ミューテーションは**タイプ**と**ハンドラ**を持ちます。ハンドラ関数は Vuex の状態（state）を第1引数として取得し、実際に状態の変更を行います:
 
 ```js
 const store = new Vuex.Store({
   state: {
     count: 1
   },
-  mutations: {
-    increment (state) {
-      // 状態を変更する
-      state.count++
+  mutations:{
+    decrement: state => {
+      state.counter--
     }
   }
 })
@@ -447,142 +382,10 @@ const store = new Vuex.Store({
 直接ミューテーションハンドラを呼び出すことはできません。この mutations オプションは、どちらかいうと "タイプが `increment` のミューテーションがトリガーされたときに、このハンドラが呼ばれる" といったイベント登録のようなものです。ミューテーションハンドラを起動するためにはミューテーションのタイプを指定して `store.commit` を呼び出す必要があります:
 
 ```js
-store.commit('increment')
-```
-
-### 追加の引数を渡してコミットする
-
-`store.commit` に追加の引数を渡すこともできます。この追加の引数は、特定のミューテーションに対する**ペイロード**と呼びます:
-
-```js
-// ...
-mutations: {
-  increment (state, n) {
-    state.count += n
-  }
-}
-store.commit('increment', 10)
-```
-
-ほとんどの場合、ペイロードはオブジェクトにすべきです。そうすることで複数のフィールドを含められるようになり、またミューテーションがより記述的に記録されるようになります:
-
-```js
-// ...
-mutations: {
-  increment (state, payload) {
-    state.count += payload.amount
-  }
-}
-store.commit('increment', {
-  amount: 10
-})
-```
-
-### オブジェクトスタイルのコミット
-
-また `type` プロパティを持つオブジェクトを使って、ミューテーションをコミットすることもできます:
-
-```js
-store.commit({
-  type: 'increment',
-  amount: 10
-})
-```
-
-オブジェクトスタイルでコミットするとき、オブジェクト全体がペイロードとしてミューテーションハンドラに渡されます。したがってハンドラの例は上記と同じです:
-
-```js
-mutations: {
-  increment (state, payload) {
-    state.count += payload.amount
-  }
-}
-```
-
-### Vue のリアクティブなルールに則ったミューテーション
-
-Vuex ストアの状態は Vue によってリアクティブになっているので、状態を変更すると、状態を監視している Vue コンポーネントは自動的に更新されます。これは Vuex のミューテーションは、通常の Vue と動作させているときと同じく、リアクティブな値に関する注意が必要であることを意味します:
-
-1. あらかじめ全ての必要なフィールドによって、ストアの初期状態を初期化することが望ましいです
-2. 新しいプロパティをオブジェクトに追加するとき、以下のいずれかが必要です:
-
-- `Vue.set(obj, 'newProp', 123)` を使用する。あるいは
-
-- 全く新しいオブジェクトで既存のオブジェクトを置き換える。例えば、stage-3 の[スプレッドシンタックス（object spread syntax）](https://github.com/sebmarkbage/ecmascript-rest-spread) を使用して、次のように書くことができます:
-
-  ```js
-  state.obj = { ...state.obj, newProp: 123 }
-  ```
-
-### ミューテーション・タイプに定数を使用する
-
-いろいろな Flux 実装において、ミューテーション・タイプに定数を使用することが共通して見られるパターンです。これはコードに対してリントツールのようなツールを利用できるという利点があり、また単一ファイルに全ての定数を設定することによって、共同で作業する人に、アプリケーション全体で何のミューテーションが可能であるかを一目見ただけで理解できるようにします:
-
-```js
-// mutation-types.js
-export const SOME_MUTATION = 'SOME_MUTATION'
-// store.js
-import Vuex from 'vuex'
-import { SOME_MUTATION } from './mutation-types'
-
-const store = new Vuex.Store({
-  state: { ... },
-  mutations: {
-    // 定数を関数名として使用できる ES2015 の算出プロパティ名（computed property name）機能を使用できます
-    [SOME_MUTATION] (state) {
-      // 状態を変更する
+methods:{
+    decrement(){
+      this.$store.commit('decrement')
     }
   }
-})
-```
-
-定数を使用するかどうかは好みの問題です。多くの開発者による大規模なプロジェクトで役に立ちますが、完全にオプションなので、もしお気に召さなければ使用しなくても構いません。
-
-### ミューテーションは同期的でなければならない
-
-ひとつの重要なルールを覚えておきましょう。それは**ミューテーションハンドラ関数は同期的でなければならない**ということです。なぜか？次の例で考えてみましょう:
-
-```js
-mutations: {
-  someMutation (state) {
-    api.callAsyncMethod(() => {
-      state.count++
-    })
-  }
-}
-```
-
-いま、開発ツールのミューテーションのログを見ながら、アプリケーションのデバッグを行っていることを想像してください。全てのミューテーションをログに記録するためには、ミューテーションの前後の状態のスナップショットを捕捉することが必要です。しかし、上の例にあるミューテーション内の非同期コールバックは、それを不可能にします: そのコールバックは、ミューテーションがコミットされた時点ではまだ呼び出されていません。そして、コールバックが実際にいつ呼び出されるかを、開発ツールは知る術がありません。いかなる状態変更でも、コールバック内で起きる場合は本質的に追跡不可能です。
-
-### コンポーネント内におけるミューテーションのコミット
-
-`this.$store.commit('xxx')` と書くか、もしくはコンポーネントのメソッドを `store.commit` にマッピングする `mapMutations` ヘルパーを呼び出すこと（ルートの `store` の注入が必要）で、コンポーネント内でミューテーションをコミットできます:
-
-```js
-import { mapMutations } from 'vuex'
-
-export default {
-  // ...
-  methods: {
-    ...mapMutations([
-      'increment', // `this.increment()` を `this.$store.commit('increment')` にマッピングする
-
-      // mapMutations はペイロードサポートする:
-      'incrementBy' // `this.incrementBy(amount)` を `this.$store.commit('incrementBy', amount)` にマッピングする
-    ]),
-    ...mapMutations({
-      add: 'increment' // `this.add()` を `this.$store.commit('increment')` にマッピングする
-    })
-  }
-}
-```
-
-### アクションへ向けて
-
-状態変更を非同期に組み合わせることは、プログラムの動きを予測することを非常に困難にします。例えば、状態を変更する非同期コールバックを持った 2つのメソッドを両方呼び出すとき、それらがいつ呼び出されたか、どちらが先に呼び出されたかを、どうやって知ればよいのでしょう？これがまさに、状態変更と非同期の 2つの概念を分離したいという理由です。Vuex では**全てのミューテーションは同期的に行う**という作法になっています:
-
-```js
-store.commit('increment')
-// "increment" ミューテーションによる状態変更は、この時点で行われるべきです
 ```
 
